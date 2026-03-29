@@ -5,6 +5,7 @@ public class UIManager : MonoBehaviour
     [Header("Panel References")]
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject gamePanel;
+    [SerializeField] private GameObject opponentSelectPanel;
 
     void Start()
     {
@@ -28,6 +29,18 @@ public class UIManager : MonoBehaviour
     public void StartGame()
     {
         StartGame(mainMenuPanel, gamePanel);
+    }
+
+    public void OpenOpponentSelect()
+    {
+        if (mainMenuPanel != null)
+            mainMenuPanel.SetActive(false);
+
+        if (gamePanel != null)
+            gamePanel.SetActive(false);
+
+        if (opponentSelectPanel != null)
+            opponentSelectPanel.SetActive(true);
     }
 
     public void ExitGame()
