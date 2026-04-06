@@ -137,66 +137,103 @@ public class RobotFighter : MonoBehaviour
 
     private IEnumerator PlayTwoAnimation()
     {
-        Vector3 leftPos = originalLocalPosition + originalLocalRotation * Vector3.left * (commandDistance * 0.7f);
-        Vector3 rightPos = originalLocalPosition + originalLocalRotation * Vector3.right * commandDistance;
-        Quaternion leftRot = originalLocalRotation * Quaternion.Euler(0f, 0f, commandLeanAngle);
-        Quaternion rightRot = originalLocalRotation * Quaternion.Euler(0f, 0f, -commandLeanAngle);
-        Vector3 squashedScale = new Vector3(originalScale.x * 0.95f, originalScale.y * 1.08f, originalScale.z * 0.95f);
+        float dashSpeed = commandSpeed * 1.35f;
+        float sideAmount = commandDistance * 1.25f;
+
+        Vector3 leftPos = originalLocalPosition + originalLocalRotation * Vector3.left * sideAmount;
+        Vector3 rightPos = originalLocalPosition + originalLocalRotation * Vector3.right * sideAmount;
+        Vector3 crouchScale = new Vector3(originalScale.x * 1.08f, originalScale.y * 0.86f, originalScale.z * 1.08f);
+
+        Quaternion leftTilt = originalLocalRotation * Quaternion.Euler(0f, -commandTwistAngle * 0.7f, commandLeanAngle * 1.2f);
+        Quaternion rightTilt = originalLocalRotation * Quaternion.Euler(0f, commandTwistAngle * 0.7f, -commandLeanAngle * 1.2f);
 
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime * commandSpeed;
-            visualTransform.localPosition = Vector3.Lerp(originalLocalPosition, leftPos, t);
-            visualTransform.localRotation = Quaternion.Lerp(originalLocalRotation, leftRot, t);
-            visualTransform.localScale = Vector3.Lerp(originalScale, squashedScale, t);
+            t += Time.deltaTime * dashSpeed;
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+            visualTransform.localPosition = Vector3.Lerp(originalLocalPosition, leftPos, eased);
+            visualTransform.localRotation = Quaternion.Slerp(originalLocalRotation, leftTilt, eased);
+            visualTransform.localScale = Vector3.Lerp(originalScale, crouchScale, eased);
             yield return null;
         }
 
         t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime * commandSpeed;
-            visualTransform.localPosition = Vector3.Lerp(leftPos, rightPos, t);
-            visualTransform.localRotation = Quaternion.Lerp(leftRot, rightRot, t);
-            visualTransform.localScale = Vector3.Lerp(squashedScale, originalScale, t);
+            t += Time.deltaTime * dashSpeed * 1.1f;
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+            visualTransform.localPosition = Vector3.Lerp(leftPos, rightPos, eased);
+            visualTransform.localRotation = Quaternion.Slerp(leftTilt, rightTilt, eased);
+            visualTransform.localScale = Vector3.Lerp(crouchScale, crouchScale, eased);
             yield return null;
         }
 
         t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime * commandSpeed;
-            visualTransform.localPosition = Vector3.Lerp(rightPos, originalLocalPosition, t);
-            visualTransform.localRotation = Quaternion.Lerp(rightRot, originalLocalRotation, t);
-            visualTransform.localScale = Vector3.Lerp(originalScale, originalScale, t);
+            t += Time.deltaTime * dashSpeed;
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+            visualTransform.localPosition = Vector3.Lerp(rightPos, originalLocalPosition, eased);
+            visualTransform.localRotation = Quaternion.Slerp(rightTilt, originalLocalRotation, eased);
+            visualTransform.localScale = Vector3.Lerp(crouchScale, originalScale, eased);
             yield return null;
         }
     }
 
     private IEnumerator PlayThreeAnimation()
     {
-        Vector3 hopPos = originalLocalPosition + (originalLocalRotation * Vector3.up) * commandHopHeight;
-        Quaternion twistRot = originalLocalRotation * Quaternion.Euler(0f, commandTwistAngle, 0f);
-        Vector3 stretchedScale = new Vector3(originalScale.x * 1.08f, originalScale.y * 0.92f, originalScale.z * 1.08f);
+        float burstSpeed = commandSpeed * 1.1f;
+
+        Vector3 windupPos = originalLocalPosition + originalLocalRotation * Vector3.back * (commandDistance * 0.45f);
+        Quaternion windupRot = originalLocalRotation * Quaternion.Euler(commandLeanAngle * 0.75f, -commandTwistAngle * 0.8f, 0f);
+        Vector3 windupScale = new Vector3(originalScale.x * 0.9f, originalScale.y * 0.85f, originalScale.z * 1.15f);
+
+        Vector3 launchPos = originalLocalPosition + (originalLocalRotation * Vector3.up) * (commandHopHeight * 2.8f);
+        Quaternion launchRot = originalLocalRotation * Quaternion.Euler(-commandLeanAngle * 0.3f, commandTwistAngle * 6f, 0f);
+        Vector3 launchScale = new Vector3(originalScale.x * 1.1f, originalScale.y * 1.22f, originalScale.z * 0.92f);
+
+        Vector3 impactScale = new Vector3(originalScale.x * 1.18f, originalScale.y * 0.78f, originalScale.z * 1.18f);
 
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime * commandSpeed;
-            visualTransform.localPosition = Vector3.Lerp(originalLocalPosition, hopPos, t);
-            visualTransform.localRotation = Quaternion.Lerp(originalLocalRotation, twistRot, t);
-            visualTransform.localScale = Vector3.Lerp(originalScale, stretchedScale, t);
+            t += Time.deltaTime * burstSpeed * 0.9f;
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+            visualTransform.localPosition = Vector3.Lerp(originalLocalPosition, windupPos, eased);
+            visualTransform.localRotation = Quaternion.Slerp(originalLocalRotation, windupRot, eased);
+            visualTransform.localScale = Vector3.Lerp(originalScale, windupScale, eased);
             yield return null;
         }
 
         t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime * commandSpeed;
-            visualTransform.localPosition = Vector3.Lerp(hopPos, originalLocalPosition, t);
-            visualTransform.localRotation = Quaternion.Lerp(twistRot, originalLocalRotation, t);
-            visualTransform.localScale = Vector3.Lerp(stretchedScale, originalScale, t);
+            t += Time.deltaTime * burstSpeed * 1.4f;
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+            visualTransform.localPosition = Vector3.Lerp(windupPos, launchPos, eased);
+            visualTransform.localRotation = Quaternion.Slerp(windupRot, launchRot, eased);
+            visualTransform.localScale = Vector3.Lerp(windupScale, launchScale, eased);
+            yield return null;
+        }
+
+        t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * burstSpeed;
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+            visualTransform.localPosition = Vector3.Lerp(launchPos, originalLocalPosition, eased);
+            visualTransform.localRotation = Quaternion.Slerp(launchRot, originalLocalRotation, eased);
+            visualTransform.localScale = Vector3.Lerp(launchScale, impactScale, eased);
+            yield return null;
+        }
+
+        t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * burstSpeed * 1.2f;
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+            visualTransform.localScale = Vector3.Lerp(impactScale, originalScale, eased);
             yield return null;
         }
     }
