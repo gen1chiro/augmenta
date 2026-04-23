@@ -14,6 +14,7 @@ public class ARPlacementManager : MonoBehaviour
     public GameObject placementIndicator;
     public GameObject arenaPrefab;
     public GameObject robotPrefab;
+    public GameObject enemyPrefab;
 
     [Header("Events")]
     public RobotPlacedEvent OnRobotPlaced;
@@ -136,32 +137,48 @@ public class ARPlacementManager : MonoBehaviour
     }
 
     private void PlaceObjects()
+    {
+        if (arenaPrefab == null || robotPrefab == null || enemyPrefab == null) return;
+
+        Instantiate(arenaPrefab, placementPose.position, placementPose.rotation);
+        
+        // Arena is approx 1m x 1m. Spawn robots in opposite corners.
+        float offset = 0.35f; 
+        float arenaSize = 1.0f;
+        
+        Vector3 playerOffset = (placementPose.rotation * new Vector3(-offset, 0, -offset));
+        Vector3 enemyOffset = (placementPose.rotation * new Vector3(offset, 0, offset));
+
+        Vector3 playerSpawnPos = placementPose.position + playerOffset + Vector3.up * 0.01f;
+        Vector3 enemySpawnPos = placementPose.position + enemyOffset + Vector3.up * 0.01f;
+
+        // Spawn Player
+        GameObject spawnedRobot = Instantiate(robotPrefab, playerSpawnPos, placementPose.rotation);
+        RobotController playerController = spawnedRobot.GetComponent<RobotController>();
+        if (playerController != null) playerController.SetArenaContext(placementPose.position, arenaSize);
+
+        // Spawn Enemy
+        GameObject spawnedEnemy = Instantiate(enemyPrefab, enemySpawnPos, placementPose.rotation * Quaternion.Euler(0, 180, 0));
+        EnemyAIController enemyAI = spawnedEnemy.GetComponent<EnemyAIController>();
+        if (enemyAI != null) enemyAI.SetArenaContext(placementPose.position, arenaSize);
+
+        // -----------------------------
+
+        if (placementIndicator != null) placementIndicator.SetActive(false);
+        arenaPlaced = true;
+        
+        if (planeManager != null)
         {
-            if (arenaPrefab == null || robotPrefab == null) return;
-
-            Instantiate(arenaPrefab, placementPose.position, placementPose.rotation);
-            
-            Vector3 robotSpawnPos = placementPose.position + Vector3.up * 0.05f;
-            GameObject spawnedRobot = Instantiate(robotPrefab, robotSpawnPos, placementPose.rotation);
-            RobotController controller = spawnedRobot.GetComponent<RobotController>();
-
-            // -----------------------------
-
-            if (placementIndicator != null) placementIndicator.SetActive(false);
-            arenaPlaced = true;
-            
-            if (planeManager != null)
+            planeManager.enabled = false;
+            foreach (var plane in planeManager.trackables)
             {
-                planeManager.enabled = false;
-                foreach (var plane in planeManager.trackables)
-                {
-                    plane.gameObject.SetActive(false);
-                }
-            }
-
-            if (controller != null)
-            {
-                OnRobotPlaced?.Invoke(controller);
+                plane.gameObject.SetActive(false);
             }
         }
+
+        if (playerController != null)
+        {
+            OnRobotPlaced?.Invoke(playerController);
+        }
+    }
 }

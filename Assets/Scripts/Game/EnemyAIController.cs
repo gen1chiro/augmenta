@@ -1,20 +1,30 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
-public class RobotController : MonoBehaviour
+public class EnemyAIController : MonoBehaviour
 {
     [Header("Targeting")]
     [SerializeField] private Transform target;
-    public float rotationSmoothSpeed = 10f;
+    public float rotationSmoothSpeed = 8f;
+
+    [Header("AI Realism")]
+    public float trackingSmoothTime = 0.25f;
+    private Vector3 perceivedTargetPos;
+    private Vector3 perceptionVelocity;
 
     [Header("Movement Settings")]
-    public float moveSpeed = 3.5f; // Increased slightly to compensate for longer rests
+    public float moveSpeed = 2.5f; 
     public float gravity = 9.81f;
+    public float optimalDistance = 0.5f; 
+    public float distanceThreshold = 0.15f; 
 
     [Header("Boxing Rhythm")]
-    [Range(0.1f, 5f)] public float stepFrequency = 1.0f; // Slower overall rhythm
-    [Range(0.1f, 1f)] public float stepDuration = 0.35f; // Quicker push, longer plant 
+    public float stepFrequency = 0.85f; 
+    public float stepDuration = 0.35f;  
+
+    [Header("Combat AI")]
+    public float minAttackInterval = 2f;
+    public float maxAttackInterval = 4f;
     
     [Header("Arena Bounds")]
     private Vector3 arenaCenter;
@@ -23,11 +33,8 @@ public class RobotController : MonoBehaviour
 
     private Animator animator;
     private CharacterController characterController;
-    private PlayerControls playerControls;
-    private Vector2 moveInput;
     private Vector3 verticalVelocity;
     private Vector3 moveVelocity;
-    private Camera mainCamera;
     
     private float stepTimer = 0f;
     private float currentPulse = 0f;
@@ -57,6 +64,14 @@ public class RobotController : MonoBehaviour
                state.IsName("Knockout");
     }
 
+    private float attackTimer = 0f;
+    private float nextAttackTime;
+    private float sideStepChance = 0.4f;
+    private float sideStepDir = 1f;
+    
+    // FIX 1: Lock variable to prevent rapid-fire direction flipping
+    private bool hasRolledSideStep = false; 
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -67,41 +82,32 @@ public class RobotController : MonoBehaviour
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             animator.applyRootMotion = false;
         }
+        
+        SetNextAttackTime();
 
-        playerControls = new PlayerControls();
-        mainCamera = Camera.main;
+        if (target != null)
+        {
+            perceivedTargetPos = target.position;
+        }
     }
-
-    private void OnEnable()
-    {
-        playerControls.Player.Enable();
-        playerControls.Player.Move.performed += OnMovePerformed;
-        playerControls.Player.Move.canceled += OnMoveCanceled;
-    }
-
-    private void OnDisable()
-    {
-        playerControls.Player.Move.performed -= OnMovePerformed;
-        playerControls.Player.Move.canceled -= OnMoveCanceled;
-        playerControls.Player.Disable();
-    }
-
-    private void OnMovePerformed(InputAction.CallbackContext context) => moveInput = context.ReadValue<Vector2>();
-    private void OnMoveCanceled(InputAction.CallbackContext context) => moveInput = Vector2.zero;
 
     private void Update()
     {
-        if (target == null || !target.gameObject.scene.IsValid()) FindEnemy();
-        
+        if (target == null || !target.gameObject.scene.IsValid())
+        {
+            FindPlayer();
+            return;
+        }
+
+        perceivedTargetPos = Vector3.SmoothDamp(perceivedTargetPos, target.position, ref perceptionVelocity, trackingSmoothTime);
         moveVelocity = Vector3.zero;
-        
+
         UpdatePulse();
         AlwaysFaceTarget();
         ApplyGravity();
-        CalculateMovement();
-        
+        HandleAIBehavior();
+
         characterController.Move((moveVelocity + verticalVelocity) * Time.deltaTime);
-        
         RestrictToArena();
     }
 
@@ -113,7 +119,7 @@ public class RobotController : MonoBehaviour
             float cycleTime = (stepTimer * stepFrequency) % 1f;
 
             float rawPulse = (cycleTime < stepDuration) ? Mathf.Sin((cycleTime / stepDuration) * Mathf.PI) : 0f;
-            currentPulse = Mathf.Pow(rawPulse, 0.7f);
+            currentPulse = Mathf.Pow(rawPulse, 0.7f); 
 
             if (currentPulse <= 0.001f)
             {
@@ -130,27 +136,28 @@ public class RobotController : MonoBehaviour
             return;
         }
 
-        bool isMoving = moveInput.sqrMagnitude > 0.01f;
-        bool isRotating = false;
-
+        bool needsRotate = false;
         if (target != null)
         {
-            Vector3 dir = (target.position - transform.position);
-            dir.y = 0;
-            if (dir.sqrMagnitude > 0.01f)
+            Vector3 posFlat = transform.position; posFlat.y = 0;
+            Vector3 targetFlat = perceivedTargetPos; targetFlat.y = 0;
+            Vector3 dir = (targetFlat - posFlat);
+            if (dir.sqrMagnitude > 0.001f)
             {
                 Quaternion targetRot = Quaternion.LookRotation(dir);
-                isRotating = Quaternion.Angle(transform.rotation, targetRot) > 5f;
+                needsRotate = Quaternion.Angle(transform.rotation, targetRot) > 5f;
             }
         }
 
-        if (isMoving || isRotating)
+        bool needsMove = true; 
+
+        if (needsMove || needsRotate)
         {
             stepTimer += Time.deltaTime;
             float cycleTime = (stepTimer * stepFrequency) % 1f;
             
             float rawPulse = (cycleTime < stepDuration) ? Mathf.Sin((cycleTime / stepDuration) * Mathf.PI) : 0f;
-            currentPulse = Mathf.Pow(rawPulse, 0.7f);
+            currentPulse = Mathf.Pow(rawPulse, 0.7f); 
         }
         else
         {
@@ -167,14 +174,15 @@ public class RobotController : MonoBehaviour
         hasArenaBounds = true;
     }
 
-    private void FindEnemy()
+    private void FindPlayer()
     {
-        var enemies = Object.FindObjectsByType<EnemyAIController>(FindObjectsSortMode.None);
-        foreach (var enemy in enemies)
+        var players = Object.FindObjectsByType<RobotController>(FindObjectsSortMode.None);
+        foreach (var p in players)
         {
-            if (enemy.gameObject.scene.IsValid())
+            if (p.gameObject.scene.IsValid())
             {
-                target = enemy.transform;
+                target = p.transform;
+                perceivedTargetPos = target.position; 
                 break;
             }
         }
@@ -182,31 +190,18 @@ public class RobotController : MonoBehaviour
 
     private void AlwaysFaceTarget()
     {
-        if (target == null) 
+        if (target == null || IsBusy()) 
         {
             pivotContribution = 0f;
             return;
         }
 
-        var stateInfo = animator != null ? animator.GetCurrentAnimatorStateInfo(0) : default;
-        bool isAttacking = stateInfo.IsName("Jab") || stateInfo.IsName("Hook") || 
-                           stateInfo.IsName("Uppercut") || stateInfo.IsName("Cross") ||
-                           stateInfo.IsName("Hit") || stateInfo.IsName("Knockout");
-
-        if (isAttacking)
-        {
-            pivotContribution = 0f; 
-            return;
-        }
-
-        Vector3 direction = (target.position - transform.position);
+        Vector3 direction = (perceivedTargetPos - transform.position);
         direction.y = 0; 
         
         if (direction.sqrMagnitude > 0.001f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            
-            // Constantly and smoothly rotate to face target
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSmoothSpeed * Time.deltaTime);
             
             float angleDiff = Vector3.Angle(transform.forward, direction);
@@ -227,7 +222,7 @@ public class RobotController : MonoBehaviour
     {
         if (characterController.isGrounded && verticalVelocity.y < 0)
         {
-            verticalVelocity.y = -2f; 
+            verticalVelocity.y = -2f;
         }
         else
         {
@@ -235,41 +230,94 @@ public class RobotController : MonoBehaviour
         }
     }
 
-    private void CalculateMovement()
+    private void HandleAIBehavior()
     {
-        Vector3 moveDirection = Vector3.zero;
-        bool isMovingIntent = moveInput.sqrMagnitude > 0.01f;
-
-        if (!IsBusy() && isMovingIntent && mainCamera != null)
+        if (IsBusy())
         {
-            Vector3 camForward = Vector3.ProjectOnPlane(mainCamera.transform.forward, Vector3.up).normalized;
-            Vector3 camRight = Vector3.ProjectOnPlane(mainCamera.transform.right, Vector3.up).normalized;
-            moveDirection = (camForward * moveInput.y + camRight * moveInput.x).normalized;
-            
-            float pulseSpeed = moveSpeed * currentPulse * 1.5f; 
-            moveVelocity = moveDirection * pulseSpeed;
+            moveVelocity = Vector3.zero;
+            if (animator != null)
+            {
+                animator.SetFloat("MoveX", Mathf.Lerp(animator.GetFloat("MoveX"), 0f, Time.deltaTime * 15f));
+                animator.SetFloat("MoveZ", Mathf.Lerp(animator.GetFloat("MoveZ"), 0f, Time.deltaTime * 15f));
+            }
+            return;
         }
 
+        float scale = transform.localScale.y;
+        float maxAttackDist = (optimalDistance + distanceThreshold) * scale;
+        float minAttackDist = (optimalDistance - distanceThreshold) * scale;
+
+        Vector3 posFlat = transform.position; posFlat.y = 0;
+        Vector3 targetFlat = perceivedTargetPos; targetFlat.y = 0;
+        float distance = Vector3.Distance(posFlat, targetFlat);
+        
+        attackTimer += Time.deltaTime;
+        if (attackTimer >= nextAttackTime && distance <= maxAttackDist)
+        {
+            if (PerformRandomAttack())
+            {
+                attackTimer = 0;
+                SetNextAttackTime();
+                moveVelocity = Vector3.zero;
+                return;
+            }
+        }
+
+        Vector3 moveDir = Vector3.zero;
+
+        // FIX 1: Lock the random roll so it only triggers ONCE at the start of a cycle
+        float cycleTime = (stepTimer * stepFrequency) % 1f;
+        if (cycleTime < 0.05f) 
+        {
+            if (!hasRolledSideStep)
+            {
+                if (Random.value < sideStepChance) 
+                {
+                    sideStepDir = (Random.value > 0.5f) ? 1f : -1f;
+                }
+                hasRolledSideStep = true;
+            }
+        }
+        else
+        {
+            hasRolledSideStep = false; // Reset the lock once we are past the 0.05f window
+        }
+
+        if (distance > maxAttackDist)
+        {
+            moveDir = (targetFlat - posFlat).normalized;
+        }
+        else if (distance < minAttackDist)
+        {
+            moveDir = ((posFlat - targetFlat).normalized + (transform.right * sideStepDir * 0.35f)).normalized;
+        }
+        else
+        {
+            moveDir = transform.right * sideStepDir;
+        }
+
+        if (currentPulse > 0.01f && moveDir != Vector3.zero)
+        {
+            moveVelocity = moveDir.normalized * (moveSpeed * currentPulse);
+        }
+
+        // FIX 2: Smoothly Lerp animator values to prevent snappy leg glitches
         if (animator != null)
         {
-            Vector3 localMove = moveDirection != Vector3.zero ? transform.InverseTransformDirection(moveDirection) : Vector3.zero;
+            Vector3 localMove = moveDir != Vector3.zero ? transform.InverseTransformDirection(moveDir.normalized) : Vector3.zero;
             
             float targetX = 0f;
-            if (Mathf.Abs(localMove.x) > 0.1f)
-            {
-                targetX = Mathf.Sign(localMove.x);
-            }
-            else if (Mathf.Abs(pivotContribution) > 0.01f)
-            {
-                targetX = pivotContribution * 0.5f;
-            }
-
-            bool isActivelyPivoting = Mathf.Abs(pivotContribution) > 0.01f;
-            // Increased the minimum blend to 0.5f so they look active while planted
-            float animIntensity = (isMovingIntent || isActivelyPivoting) ? Mathf.Max(currentPulse, 0.5f) : currentPulse;
+            if (Mathf.Abs(localMove.x) > 0.1f) targetX = Mathf.Sign(localMove.x); 
+            else if (Mathf.Abs(pivotContribution) > 0.01f) targetX = pivotContribution * 0.5f; 
             
-            animator.SetFloat("MoveX", targetX * animIntensity);
-            animator.SetFloat("MoveZ", localMove.z * animIntensity);
+            float animIntensity = currentPulse; // Removed the forced 0.5f clamp so feet properly plant during rest
+
+            float finalMoveX = targetX * animIntensity;
+            float finalMoveZ = localMove.z * animIntensity;
+
+            // Lerp the blend tree to smooth out sudden directional changes
+            animator.SetFloat("MoveX", Mathf.Lerp(animator.GetFloat("MoveX"), finalMoveX, Time.deltaTime * 12f));
+            animator.SetFloat("MoveZ", Mathf.Lerp(animator.GetFloat("MoveZ"), finalMoveZ, Time.deltaTime * 12f));
         }
     }
 
@@ -288,6 +336,20 @@ public class RobotController : MonoBehaviour
         {
             transform.position = new Vector3(arenaCenter.x + clampedX, currentPos.y, arenaCenter.z + clampedZ);
         }
+    }
+
+    private void SetNextAttackTime() => nextAttackTime = Random.Range(minAttackInterval, maxAttackInterval);
+
+    private bool PerformRandomAttack()
+    {
+        int rand = Random.Range(0, 4);
+        switch (rand)
+        {
+            case 0: return TriggerJab();
+            case 1: return TriggerCross();
+            case 2: return TriggerHook();
+            default: return TriggerUppercut();
+        };
     }
 
     public bool TriggerJab() => SafeTrigger("Jab");

@@ -127,6 +127,10 @@ public class VoiceIntentProcessor : MonoBehaviour
                 Debug.Log("Triggering Cross");
                 robot.TriggerCross();
                 break;
+            case "block":
+                Debug.Log("Triggering Block");
+                robot.TriggerBlock();
+                break;
             default:
                 Debug.LogWarning($"Intent '{intent}' not mapped to any robot action.");
                 break;
