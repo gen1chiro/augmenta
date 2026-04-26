@@ -1,8 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CharacterController))]
 public class EnemyAIController : MonoBehaviour
 {
+    public event System.Action Died;
+
     [Header("Targeting")]
     [SerializeField] private Transform target;
     public float rotationSmoothSpeed = 8f;
@@ -38,6 +41,7 @@ public class EnemyAIController : MonoBehaviour
     [SerializeField] private float hookDamage = 12f;
     [SerializeField] private float uppercutDamage = 18f;
     [SerializeField] private float crossDamage = 10f;
+    [SerializeField] private Slider healthSlider;
 
     private float currentHealth;
     private float pendingDamage;
@@ -95,6 +99,7 @@ public class EnemyAIController : MonoBehaviour
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         currentHealth = maxHealth;
+        UpdateHealthUI();
         
         if (animator != null)
         {
@@ -528,19 +533,38 @@ public class EnemyAIController : MonoBehaviour
             return;
         }
 
-        currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth - damage, 0f, maxHealth);
         Debug.Log($"Enemy took {damage} damage! Remaining HP: {currentHealth}");
 
         if (currentHealth <= 0)
         {
-            currentHealth = 0;
             isDead = true;
             TriggerKnockout();
+            Died?.Invoke();
         }
         else
         {
             TriggerHit();
         }
+
+        UpdateHealthUI();
+    }
+
+    public void SetHealthSlider(Slider slider)
+    {
+        healthSlider = slider;
+        UpdateHealthUI();
+    }
+
+    private void UpdateHealthUI()
+    {
+        if (healthSlider == null) return;
+
+        float safeMaxHealth = Mathf.Max(1f, maxHealth);
+        healthSlider.wholeNumbers = false;
+        healthSlider.minValue = 0f;
+        healthSlider.maxValue = safeMaxHealth;
+        healthSlider.value = Mathf.Clamp(currentHealth, 0f, safeMaxHealth);
     }
 
     private bool SafeTrigger(string triggerName, bool force = false)

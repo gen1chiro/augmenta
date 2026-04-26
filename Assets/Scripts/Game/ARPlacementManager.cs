@@ -4,6 +4,7 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class RobotPlacedEvent : UnityEvent<RobotController> {}
@@ -16,11 +17,22 @@ public class ARPlacementManager : MonoBehaviour
     public GameObject robotPrefab;
     public GameObject enemyPrefab;
 
+    [Header("UI")]
+    [SerializeField] private Slider playerHealthSlider;
+    [SerializeField] private Slider enemyHealthSlider;
+    [SerializeField] private float knockoutPanelDelay = 5.0f;
+
+    private UIManager uiManager;
+
     [Header("Events")]
     public RobotPlacedEvent OnRobotPlaced;
     
     private ARRaycastManager raycastManager;
     private ARPlaneManager planeManager;
+    private RobotController spawnedPlayerController;
+    private EnemyAIController spawnedEnemyController;
+    private Coroutine resultPanelCoroutine;
+    private bool resultPanelQueued;
     private Pose placementPose;
     private bool placementPoseIsValid = false;
     private bool arenaPlaced = false;
@@ -30,6 +42,7 @@ public class ARPlacementManager : MonoBehaviour
     {
         raycastManager = FindFirstObjectByType<ARRaycastManager>();
         planeManager = FindFirstObjectByType<ARPlaneManager>();
+        uiManager = FindFirstObjectByType<UIManager>();
         arCamera = Camera.main;
         
         if (arCamera == null) arCamera = FindFirstObjectByType<Camera>();
@@ -59,6 +72,62 @@ public class ARPlacementManager : MonoBehaviour
         {
             PlaceObjects();
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (resultPanelCoroutine != null)
+        {
+            StopCoroutine(resultPanelCoroutine);
+            resultPanelCoroutine = null;
+        }
+
+        if (uiManager == null) return;
+
+        if (spawnedPlayerController != null)
+        {
+            spawnedPlayerController.Died -= OnPlayerDied;
+        }
+
+        if (spawnedEnemyController != null)
+        {
+            spawnedEnemyController.Died -= OnEnemyDied;
+        }
+    }
+
+    private void OnPlayerDied()
+    {
+        QueueResultPanel(showWin: false);
+    }
+
+    private void OnEnemyDied()
+    {
+        QueueResultPanel(showWin: true);
+    }
+
+    private void QueueResultPanel(bool showWin)
+    {
+        if (uiManager == null || resultPanelQueued) return;
+
+        resultPanelQueued = true;
+        resultPanelCoroutine = StartCoroutine(ShowResultPanelAfterDelay(showWin));
+    }
+
+    private System.Collections.IEnumerator ShowResultPanelAfterDelay(bool showWin)
+    {
+        float delay = Mathf.Max(0f, knockoutPanelDelay);
+        if (delay > 0f)
+        {
+            yield return new WaitForSeconds(delay);
+        }
+
+        if (uiManager != null)
+        {
+            if (showWin) uiManager.ShowWinPanel();
+            else uiManager.ShowLosePanel();
+        }
+
+        resultPanelCoroutine = null;
     }
 
     private bool WasTapped()
@@ -140,6 +209,16 @@ public class ARPlacementManager : MonoBehaviour
     {
         if (arenaPrefab == null || robotPrefab == null || enemyPrefab == null) return;
 
+        if (playerHealthSlider == null)
+        {
+            Debug.LogWarning("ARPlacementManager: Player health slider is not assigned.");
+        }
+
+        if (enemyHealthSlider == null)
+        {
+            Debug.LogWarning("ARPlacementManager: Enemy health slider is not assigned.");
+        }
+
         Instantiate(arenaPrefab, placementPose.position, placementPose.rotation);
         
         // Arena is approx 1m x 1m. Spawn robots in opposite corners.
@@ -155,12 +234,39 @@ public class ARPlacementManager : MonoBehaviour
         // Spawn Player
         GameObject spawnedRobot = Instantiate(robotPrefab, playerSpawnPos, placementPose.rotation);
         RobotController playerController = spawnedRobot.GetComponent<RobotController>();
-        if (playerController != null) playerController.SetArenaContext(placementPose.position, arenaSize);
+        spawnedPlayerController = playerController;
+        if (playerController != null)
+        {
+            playerController.SetArenaContext(placementPose.position, arenaSize);
+            playerController.SetHealthSlider(playerHealthSlider);
+        }
 
         // Spawn Enemy
         GameObject spawnedEnemy = Instantiate(enemyPrefab, enemySpawnPos, placementPose.rotation * Quaternion.Euler(0, 180, 0));
         EnemyAIController enemyAI = spawnedEnemy.GetComponent<EnemyAIController>();
-        if (enemyAI != null) enemyAI.SetArenaContext(placementPose.position, arenaSize);
+        spawnedEnemyController = enemyAI;
+        if (enemyAI != null)
+        {
+            enemyAI.SetArenaContext(placementPose.position, arenaSize);
+            enemyAI.SetHealthSlider(enemyHealthSlider);
+        }
+
+        if (uiManager != null)
+        {
+            if (playerController != null)
+            {
+                playerController.Died += OnPlayerDied;
+            }
+
+            if (enemyAI != null)
+            {
+                enemyAI.Died += OnEnemyDied;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("ARPlacementManager: UIManager not found. Win/Lose panels will not be shown.");
+        }
 
         // -----------------------------
 
