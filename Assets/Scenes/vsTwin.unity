@@ -1868,7 +1868,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 802709084}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ReloadScene
         m_Mode: 1
@@ -3814,6 +3814,25 @@ MonoBehaviour:
   winPanel: {fileID: 1393498733}
   losePanel: {fileID: 1140600167}
   joystickPanel: {fileID: 2047554587}
+  midasButton: {fileID: 0}
+  metroButton: {fileID: 0}
+  zeusButton: {fileID: 0}
+  twinButton: {fileID: 0}
+  midasImage: {fileID: 0}
+  metroImage: {fileID: 0}
+  zeusImage: {fileID: 0}
+  twinImage: {fileID: 0}
+  midasOpenSprite: {fileID: 0}
+  midasDefeatedSprite: {fileID: 0}
+  metroLockedSprite: {fileID: 0}
+  metroOpenSprite: {fileID: 0}
+  metroDefeatedSprite: {fileID: 0}
+  twinLockedSprite: {fileID: 0}
+  twinOpenSprite: {fileID: 0}
+  twinDefeatedSprite: {fileID: 0}
+  zeusLockedSprite: {fileID: 0}
+  zeusOpenSprite: {fileID: 0}
+  zeusDefeatedSprite: {fileID: 0}
 --- !u!4 &802709085
 Transform:
   m_ObjectHideFlags: 0
@@ -10667,7 +10686,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 802709084}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ReturnToMainMenu
         m_Mode: 1

@@ -1571,7 +1571,7 @@ MonoBehaviour:
   hitAngle: 90
   hitDelay: 0.1
   maxHealth: 100
-  jabDamage: 1000
+  jabDamage: 10
   hookDamage: 15
   uppercutDamage: 20
   crossDamage: 12
