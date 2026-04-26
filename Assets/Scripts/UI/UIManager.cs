@@ -41,12 +41,18 @@ public class UIManager : MonoBehaviour
 
     [Header("SFX")]
     [SerializeField] private AudioClip bgm;
+    [SerializeField] private AudioClip gameStartSfx; // Bell Ring
+    [SerializeField] private AudioClip gameBgm; // Crowd Cheer
 
     private bool matchEnded = false;
 
-    private static void PlayButtonSfx()
+    public AudioManager GetAudioManager() => AudioManager.GetInstance();
+    public AudioClip GetGameStartSfx() => gameStartSfx;
+    public AudioClip GetGameBgm() => gameBgm;
+
+    private void PlayButtonSfx()
     {
-        AudioManager.GetInstance()?.PlayBtnSfx();
+        GetAudioManager().PlayBtnSfx();
     }
 
     void Start()
@@ -74,7 +80,8 @@ public class UIManager : MonoBehaviour
         if (mainMenuPanel != null)
             mainMenuPanel.SetActive(true);
 
-        AudioManager.GetInstance().PlayAudio(bgm, true);
+        GetAudioManager().PlayAudio(bgm, true);
+
         RefreshOpponentSelectState();
         UpdateJoystickVisibility();
     }

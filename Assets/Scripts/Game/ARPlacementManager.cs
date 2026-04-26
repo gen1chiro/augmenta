@@ -40,11 +40,17 @@ public class ARPlacementManager : MonoBehaviour
 
     void Start()
     {
+
         raycastManager = FindFirstObjectByType<ARRaycastManager>();
         planeManager = FindFirstObjectByType<ARPlaneManager>();
         uiManager = FindFirstObjectByType<UIManager>();
         arCamera = Camera.main;
         
+        if (uiManager != null)
+        {
+            uiManager.GetAudioManager().PlayAudio(uiManager.GetGameBgm(), true);
+        }
+
         if (arCamera == null) arCamera = FindFirstObjectByType<Camera>();
 
         // Explicitly set plane detection to only Horizontal to ignore walls
@@ -285,6 +291,11 @@ public class ARPlacementManager : MonoBehaviour
         if (playerController != null)
         {
             OnRobotPlaced?.Invoke(playerController);
+        }
+
+        if (uiManager != null)
+        {
+            uiManager.GetAudioManager().PlayAudio(uiManager.GetGameStartSfx());
         }
     }
 }
