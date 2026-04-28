@@ -540,6 +540,7 @@ public class EnemyAIController : MonoBehaviour
         {
             isDead = true;
             TriggerKnockout();
+            Debug.Log("[EnemyAIController] Enemy died -> invoking Died event");
             Died?.Invoke();
         }
         else

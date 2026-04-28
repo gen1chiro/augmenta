@@ -451,6 +451,79 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72989974}
   m_CullTransparentMesh: 1
+--- !u!1001 &89808301
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2290.1008
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00002
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -775.0492
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7615165650948267442, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: winPanel
+      value: 
+      objectReference: {fileID: 1393498733}
+    - target: {fileID: 7615165650948267442, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: losePanel
+      value: 
+      objectReference: {fileID: 1140600167}
+    - target: {fileID: 7615165650948267442, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: pausePanel
+      value: 
+      objectReference: {fileID: 824798863}
+    - target: {fileID: 7615165650948267442, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: joystickPanel
+      value: 
+      objectReference: {fileID: 2047554587}
+    - target: {fileID: 9193380470125666845, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_Name
+      value: _PanelRegistrar
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
 --- !u!1 &145380978
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,7 +825,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 802709084}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ShowPausePanel
         m_Mode: 1
@@ -1868,7 +1941,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 802709084}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ReloadScene
         m_Mode: 1
@@ -2275,7 +2348,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 802709084}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ReturnToMainMenu
         m_Mode: 1
@@ -3777,77 +3850,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!1 &802709083
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 802709085}
-  - component: {fileID: 802709084}
-  m_Layer: 0
-  m_Name: UIManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &802709084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 802709083}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e45aa879dda01a44a8041ef3568c5c4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  mainMenuPanel: {fileID: 0}
-  gamePanel: {fileID: 0}
-  opponentSelectPanel: {fileID: 0}
-  inGamePanel: {fileID: 0}
-  pausePanel: {fileID: 824798863}
-  winPanel: {fileID: 1393498733}
-  losePanel: {fileID: 1140600167}
-  joystickPanel: {fileID: 2047554587}
-  midasButton: {fileID: 0}
-  metroButton: {fileID: 0}
-  zeusButton: {fileID: 0}
-  twinButton: {fileID: 0}
-  midasImage: {fileID: 0}
-  metroImage: {fileID: 0}
-  zeusImage: {fileID: 0}
-  twinImage: {fileID: 0}
-  midasOpenSprite: {fileID: 0}
-  midasDefeatedSprite: {fileID: 0}
-  metroLockedSprite: {fileID: 0}
-  metroOpenSprite: {fileID: 0}
-  metroDefeatedSprite: {fileID: 0}
-  twinLockedSprite: {fileID: 0}
-  twinOpenSprite: {fileID: 0}
-  twinDefeatedSprite: {fileID: 0}
-  zeusLockedSprite: {fileID: 0}
-  zeusOpenSprite: {fileID: 0}
-  zeusDefeatedSprite: {fileID: 0}
---- !u!4 &802709085
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 802709083}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 619.5953, y: 396.6549, z: 52.58527}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &805527811
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7097,7 +7099,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 802709084}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: NextScene
         m_Mode: 5
@@ -7229,7 +7231,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 802709084}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ReturnToMainMenu
         m_Mode: 1
@@ -7963,7 +7965,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 802709084}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: HidePausePanel
         m_Mode: 1
@@ -10686,7 +10688,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 802709084}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ReturnToMainMenu
         m_Mode: 1
@@ -13287,4 +13289,4 @@ SceneRoots:
   - {fileID: 284313802}
   - {fileID: 2512387470231460711}
   - {fileID: 739002416}
-  - {fileID: 802709085}
+  - {fileID: 89808301}

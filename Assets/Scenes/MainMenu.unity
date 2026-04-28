@@ -6147,10 +6147,6 @@ MonoBehaviour:
   gamePanel: {fileID: 240289717}
   opponentSelectPanel: {fileID: 825777815}
   inGamePanel: {fileID: 1326514175}
-  pausePanel: {fileID: 1346358718}
-  winPanel: {fileID: 1533495179}
-  losePanel: {fileID: 1310814404}
-  joystickPanel: {fileID: 0}
   midasButton: {fileID: 1271987360}
   metroButton: {fileID: 782552653}
   zeusButton: {fileID: 1005504574}

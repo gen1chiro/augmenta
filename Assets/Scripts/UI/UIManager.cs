@@ -4,11 +4,15 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance { get; private set; }
+
     [Header("Panel References")]
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject gamePanel;
     [SerializeField] private GameObject opponentSelectPanel;
     [SerializeField] private GameObject inGamePanel;
+
+    [Header("Scene Specific (Runtime Assignment)")]
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject winPanel;
     [SerializeField] private GameObject losePanel;
@@ -50,10 +54,37 @@ public class UIManager : MonoBehaviour
     public AudioClip GetGameStartSfx() => gameStartSfx;
     public AudioClip GetGameBgm() => gameBgm;
 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void PlayButtonSfx()
     {
         GetAudioManager().PlayBtnSfx();
     }
+
+    // Sync Persistent UIManager to the Panels that will be used in-game
+    public void RegisterGamePanels(GameObject win, GameObject lose, GameObject pause, GameObject joystick)
+    {
+        winPanel = win;
+        losePanel = lose;
+        pausePanel = pause;
+        joystickPanel = joystick;
+
+        // Reset state for new fights
+        matchEnded = false;
+        Debug.Log($"[UIManager] Panels registered for {UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}");
+    }
+
+
 
     void Start()
     {
@@ -86,10 +117,6 @@ public class UIManager : MonoBehaviour
         UpdateJoystickVisibility();
     }
 
-    void Update()
-    {
-        
-    }
 
     public void StartGame(GameObject panelToClose, GameObject panelToOpen)
     {
@@ -128,9 +155,9 @@ public class UIManager : MonoBehaviour
         PlayButtonSfx();
 
         #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false;
         #else
-                Application.Quit();
+            Application.Quit();
         #endif
     }
 
@@ -193,7 +220,14 @@ public class UIManager : MonoBehaviour
 
     public void ShowLosePanel()
     {
+        Debug.Log($"[UIManager] Match ended: {matchEnded} | Lose Panel is null: {losePanel == null} | GameObject: {gameObject.name}, {GetInstanceID()}");
         if (matchEnded) return;
+
+        if (losePanel == null)
+        {
+            Debug.LogError("[UIManager] Lose Panel is not assigned in the Inspector for this scene!");
+            return;
+        }
 
         matchEnded = true;
 
@@ -202,6 +236,8 @@ public class UIManager : MonoBehaviour
 
         if (losePanel != null)
             losePanel.SetActive(true);
+            Debug.Log($"[UIManager] activeSelf: {losePanel.activeSelf}");
+            Debug.Log($"[UIManager] activeInHierarchy: {losePanel.activeInHierarchy}");
 
         if (winPanel != null)
             winPanel.SetActive(false);

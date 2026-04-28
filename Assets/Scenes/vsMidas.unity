@@ -351,58 +351,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72989974}
   m_CullTransparentMesh: 1
---- !u!1 &87329489
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 87329491}
-  - component: {fileID: 87329490}
-  m_Layer: 0
-  m_Name: UIManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &87329490
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87329489}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e45aa879dda01a44a8041ef3568c5c4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  mainMenuPanel: {fileID: 0}
-  gamePanel: {fileID: 0}
-  opponentSelectPanel: {fileID: 0}
-  inGamePanel: {fileID: 0}
-  pausePanel: {fileID: 1974311342}
-  winPanel: {fileID: 1082307955}
-  losePanel: {fileID: 1209296432}
-  joystickPanel: {fileID: 1328229295}
---- !u!4 &87329491
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87329489}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 459.3627, y: 0, z: 663.9389}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &136656418
 GameObject:
   m_ObjectHideFlags: 0
@@ -2231,7 +2179,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 87329490}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ShowPausePanel
         m_Mode: 1
@@ -5166,7 +5114,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 87329490}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ReturnToMainMenu
         m_Mode: 1
@@ -6412,7 +6360,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 87329490}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: NextScene
         m_Mode: 5
@@ -8204,7 +8152,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 87329490}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ReloadScene
         m_Mode: 1
@@ -8254,6 +8202,79 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1498331517}
   m_CullTransparentMesh: 1
+--- !u!1001 &1510532747
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2364.527
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00002
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -863.9174
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044647748953785961, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7615165650948267442, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: winPanel
+      value: 
+      objectReference: {fileID: 1082307955}
+    - target: {fileID: 7615165650948267442, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: losePanel
+      value: 
+      objectReference: {fileID: 1209296432}
+    - target: {fileID: 7615165650948267442, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: pausePanel
+      value: 
+      objectReference: {fileID: 1974311342}
+    - target: {fileID: 7615165650948267442, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: joystickPanel
+      value: 
+      objectReference: {fileID: 1328229295}
+    - target: {fileID: 9193380470125666845, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
+      propertyPath: m_Name
+      value: _PanelRegistrar
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e31c4d3db63fae54da592cd3de8c09d0, type: 3}
 --- !u!1 &1520419809
 GameObject:
   m_ObjectHideFlags: 0
@@ -8717,7 +8738,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 87329490}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ReturnToMainMenu
         m_Mode: 1
@@ -8849,7 +8870,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 87329490}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: HidePausePanel
         m_Mode: 1
@@ -9640,6 +9661,7 @@ RectTransform:
   m_Children:
   - {fileID: 2095973975}
   - {fileID: 1328229296}
+  - {fileID: 2077339235}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -10598,7 +10620,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 87329490}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ReturnToMainMenu
         m_Mode: 1
@@ -10883,7 +10905,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2077339234}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -10891,7 +10913,7 @@ RectTransform:
   - {fileID: 984371275}
   - {fileID: 559178060}
   - {fileID: 2077481583}
-  m_Father: {fileID: 2095973975}
+  m_Father: {fileID: 1893451117}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -11153,7 +11175,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2077339235}
   - {fileID: 1974311343}
   - {fileID: 1082307956}
   - {fileID: 1209296433}
@@ -12617,4 +12638,4 @@ SceneRoots:
   - {fileID: 1893451117}
   - {fileID: 2512387470231460711}
   - {fileID: 739002416}
-  - {fileID: 87329491}
+  - {fileID: 1510532747}
