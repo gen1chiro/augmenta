@@ -2762,7 +2762,7 @@ CharacterController:
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.03
-  m_SkinWidth: 0.005
+  m_SkinWidth: 0.01
   m_MinMoveDistance: 0.0001
   m_Center: {x: 0, y: 1.25, z: 0}
 --- !u!114 &7952420936034195247
@@ -2797,6 +2797,7 @@ MonoBehaviour:
   hookDamage: 30
   uppercutDamage: 50
   crossDamage: 25
+  healthSlider: {fileID: 0}
 --- !u!1 &7602791586998050703
 GameObject:
   m_ObjectHideFlags: 0

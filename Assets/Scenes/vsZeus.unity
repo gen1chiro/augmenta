@@ -13107,6 +13107,8 @@ MonoBehaviour:
   playerHealthSlider: {fileID: 2125904600}
   enemyHealthSlider: {fileID: 1510771054}
   knockoutPanelDelay: 5
+  spawnOffset: 0.23
+  spawnHeightOffset: 0.05
   OnRobotPlaced:
     m_PersistentCalls:
       m_Calls:

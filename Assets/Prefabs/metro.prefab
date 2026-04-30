@@ -640,7 +640,7 @@ Transform:
   m_GameObject: {fileID: 1982025124596864024}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.12804, y: -0, z: 2.20819}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -692,7 +692,7 @@ CharacterController:
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.03
-  m_SkinWidth: 0.005
+  m_SkinWidth: 0.01
   m_MinMoveDistance: 0.0001
   m_Center: {x: 0, y: 1.25, z: 0}
 --- !u!114 &7174289676231871269
@@ -727,6 +727,7 @@ MonoBehaviour:
   hookDamage: 12
   uppercutDamage: 18
   crossDamage: 10
+  healthSlider: {fileID: 0}
 --- !u!1 &2004551958805635657
 GameObject:
   m_ObjectHideFlags: 0

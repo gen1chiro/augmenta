@@ -1575,9 +1575,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8943236500446040285, guid: 48cb3fb68c91eb94999fd99957eb0cae, type: 3}
+      propertyPath: arenaPrefab
+      value: 
+      objectReference: {fileID: 9203817037450448475, guid: 332d7d004d37c45128a1b44e9511190f, type: 3}
+    - target: {fileID: 8943236500446040285, guid: 48cb3fb68c91eb94999fd99957eb0cae, type: 3}
       propertyPath: enemyPrefab
       value: 
       objectReference: {fileID: 1982025124596864024, guid: c9efa95bd91ae40a7b709ae1c9131353, type: 3}
+    - target: {fileID: 8943236500446040285, guid: 48cb3fb68c91eb94999fd99957eb0cae, type: 3}
+      propertyPath: spawnOffset
+      value: 0.23
+      objectReference: {fileID: 0}
     - target: {fileID: 8943236500446040285, guid: 48cb3fb68c91eb94999fd99957eb0cae, type: 3}
       propertyPath: enemyHealthSlider
       value: 

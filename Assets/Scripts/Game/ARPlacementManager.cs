@@ -22,6 +22,10 @@ public class ARPlacementManager : MonoBehaviour
     [SerializeField] private Slider enemyHealthSlider;
     [SerializeField] private float knockoutPanelDelay = 5.0f;
 
+    [Header("Spawn Settings")]
+    [SerializeField] private float spawnOffset = 0.25f;
+    [SerializeField] private float spawnHeightOffset = 0.05f;
+
     private InGameUIManager uiManager;
 
     [Header("Events")]
@@ -220,17 +224,18 @@ public class ARPlacementManager : MonoBehaviour
             Debug.LogWarning("ARPlacementManager: Enemy health slider is not assigned.");
         }
 
-        Instantiate(arenaPrefab, placementPose.position, placementPose.rotation);
+        Instantiate(arenaPrefab, placementPose.position, placementPose.rotation * arenaPrefab.transform.rotation);
         
         // Arena is approx 1m x 1m. Spawn robots in opposite corners.
-        float offset = 0.35f; 
+        float offset = spawnOffset; 
         float arenaSize = 1.0f;
         
         Vector3 playerOffset = (placementPose.rotation * new Vector3(-offset, 0, -offset));
         Vector3 enemyOffset = (placementPose.rotation * new Vector3(offset, 0, offset));
 
-        Vector3 playerSpawnPos = placementPose.position + playerOffset + Vector3.up * 0.01f;
-        Vector3 enemySpawnPos = placementPose.position + enemyOffset + Vector3.up * 0.01f;
+        // Spawn slightly higher to ensure they are on top of the arena
+        Vector3 playerSpawnPos = placementPose.position + playerOffset + Vector3.up * spawnHeightOffset;
+        Vector3 enemySpawnPos = placementPose.position + enemyOffset + Vector3.up * spawnHeightOffset;
 
         // Spawn Player
         GameObject spawnedRobot = Instantiate(robotPrefab, playerSpawnPos, placementPose.rotation);

@@ -12583,12 +12583,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ARPlacementManager
   placementIndicator: {fileID: 379919732355555492, guid: 21703ffdfdfea46e5b8ecc175e5dc5b1, type: 3}
-  arenaPrefab: {fileID: 1704362238820466416, guid: 90d912f32d880411f9798eb080270f94, type: 3}
+  arenaPrefab: {fileID: 9203817037450448475, guid: 332d7d004d37c45128a1b44e9511190f, type: 3}
   robotPrefab: {fileID: 5199856524409498156, guid: 47a9e0ce2a85d4dbf85e7e07f6d7e123, type: 3}
   enemyPrefab: {fileID: 8541870702208860888, guid: 834cdf48670b34b6a8586e80891a291b, type: 3}
   playerHealthSlider: {fileID: 1692064818}
   enemyHealthSlider: {fileID: 363930803}
   knockoutPanelDelay: 1.5
+  spawnOffset: 0.23
+  spawnHeightOffset: 0.05
   OnRobotPlaced:
     m_PersistentCalls:
       m_Calls:
